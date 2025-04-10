@@ -1,0 +1,25 @@
+.container {
+    display: flow-root;
+}
+
+div.float-primary {
+    float: left;
+    width: 75%;
+}
+
+div.float-sidebar {
+    float: right;
+    width: 25%;
+}
+
+ul.collapse {
+    display:none;
+}
+
+.selected {
+    color:green;
+}
+
+ul {
+    list-style-type:none;
+}

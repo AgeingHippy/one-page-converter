@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>My Converter</title>
+        <link rel="stylesheet" href="style.css">
+        <script src="script.js"></script>
+    </head>
+    <body>
+        <div id="main-div" class="container">
+            
+            <div id="content-div" class="float-primary">
+                <h1 id="unit-header">UNITS HEADER</h1>
+                <br>
+                <h2 id="conversion-header">Conversion Text</h2>
+
+                <table>
+                    <tr>
+                        <th id="th-from">Source Unit</th>
+                        <th id="th-switch"></th>
+                        <th id="th-to">Target Unit</th>
+                    </tr>
+                    <tr>
+                        <td id="td-from">
+                            <input type="text" id="convert-from">
+                        </td>
+                        <td id="td-switch"><button type="button">&lt;=switch=&gt;</button></td>
+                        <td id="td-to">
+                            <input type="text" id="convert-to">
+                        </td>
+                    </tr>
+                </table>
+                <br>
+                <div id="formula">formula here</div>
+            </div>
+
+            <div id="sidebar-div" class="float-sidebar">
+                <ul>
+                    <li>
+                        <a id="temp-selector" class="unit-selector" href="#">Temperature</a>
+                        <ul class="collapse">
+                            <li class="calc-selector"><a id="tempCToF" href="#">celcius to farenheit</a></li>
+                            <li class="calc-selector"><a id="tempFToC" href="#">farenheit to celcius</a></li>
+                            <li class="calc-selector"><a id="tempCToK" href="#">celcius to kelvin</a></li>
+                            <li class="calc-selector"><a id="tempKToC" href="#">kelvin to celcius</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a id="length-selector" class="unit-selector" href="#">Length</a>
+                        <ul class="collapse">
+                            <li class="calc-selector"><a id="lengthCmToI" href="#">cm to inch</a></li>
+                            <li class="calc-selector"><a id="tempIToCm" href="#">inch to cm</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a id="volume-selector" class="unit-selector" href="#">Volume</a>
+                        <ul class="collapse">
+                            <li class="calc-selector"><a id="volumeMlToPint" href="#">milliliter to pint</a></li>
+                            <li class="calc-selector"><a id="volumePintToMl" href="#">pint to milliliter</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+
+        <script>
+            function unitSelector(e) {
+                //set sibling ul class to not hidden (expanded)
+                let list = getElementSiblings(e.target,"ul");
+                list.forEach(element => element.classList.remove("collapse"));
+
+                //set parent li siblings ul class to hidden
+                let listSiblings = getElementSiblings(e.target.parentElement, "li");
+                listSiblings.forEach(li => {
+
+                    for (let i=0; i< li.getElementsByTagName("ul").length; i++) {
+                        li.getElementsByTagName("ul")[i].classList.add("collapse");
+                    }
+                });
+            }
+
+            Array.from(document.getElementsByClassName("unit-selector")).forEach(element => {
+                element.addEventListener("click",unitSelector);
+            });
+        </script>
+    </body>
+</html>
