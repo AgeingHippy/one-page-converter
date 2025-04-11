@@ -9,7 +9,6 @@ function ConversionFunctionElement(functionName, converseFunctionName, sourceUni
 }
 
 //map data is an object of 'functionName', 'converseFunctionName', 'sourceUnit','targetUnit', 'formula'
-debugger;
 sessionStorage.setItem('tempFToC', JSON.stringify(new ConversionFunctionElement("tempFToC","tempCToF","Farenheit","Celcius","c = (f - 32) / 1.8")));
 sessionStorage.setItem('tempCToF', JSON.stringify(new ConversionFunctionElement("tempCToF","tempFToC","Celcius","Farenheit","f = c * 1.8 + 32")));
 sessionStorage.setItem('tempCToK', JSON.stringify(new ConversionFunctionElement("tempCToK","tempKToC","Celcius","Kelvin","k = c + 273.15")));

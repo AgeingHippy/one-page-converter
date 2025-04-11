@@ -100,6 +100,9 @@
     <script>
       //Show relevant lists and collapse others
       function unitSelector(e) {
+        //set Units header
+        document.getElementById("unit-header").innerText = e.target.innerText;
+
         //set sibling ul class to not hidden (expanded)
         let list = getElementSiblings(e.target, "ul");
         list.forEach((element) => element.classList.remove("collapse"));
@@ -113,53 +116,55 @@
         });
       }
 
-      Array.from(document.getElementsByClassName("unit-selector")).forEach(
-        (element) => {
-          element.addEventListener("click", unitSelector);
+      // Array.from(document.getElementsByClassName("unit-selector")).forEach(
+      //   (element) => {
+      //     element.addEventListener("click", unitSelector);
+      //   }
+      // );
+
+      function calcSelector(event) {
+        let key = event.target.id;
+        let functionElement = JSON.parse(sessionStorage.getItem(key));
+
+        if (functionElement) {
+          document.getElementById("conversion-header").innerText =
+            event.target.innerText;
+          document
+            .getElementById("convert-from")
+            .setAttribute(
+              "data-conversion-function",
+              functionElement.functionName
+            );
+          document
+            .getElementById("convert-to")
+            .setAttribute(
+              "data-conversion-function",
+              functionElement.converseFunctionName
+            );
+          document.getElementById("th-from").innerText =
+            functionElement.sourceUnit;
+          document.getElementById("th-to").innerText =
+            functionElement.targetUnit;
+          document.getElementById("formula").innerText =
+            functionElement.formula;
         }
-      );
 
-      // function calcSelector(event) {
-
-      // }
+        //and execute function on existing data
+        document.getElementById("convert-to").value = window[
+          document
+            .getElementById("convert-from")
+            .getAttribute("data-conversion-function")
+        ](document.getElementById("convert-from").value);
+      }
 
       //delegated function to initialise conversion factor data on calc-select
       document.getElementById("conversion-selector").addEventListener(
         "click",
         (event) => {
-          if (event.target.classList.contains("calc-selector")) {
-            let key = event.target.id;
-            let functionElement = JSON.parse(sessionStorage.getItem(key));
-
-            if (functionElement) {
-              document.getElementById("conversion-header").innerText =
-                event.target.innerText;
-              document
-                .getElementById("convert-from")
-                .setAttribute(
-                  "data-conversion-function",
-                  functionElement.functionName
-                );
-              document
-                .getElementById("convert-to")
-                .setAttribute(
-                  "data-conversion-function",
-                  functionElement.converseFunctionName
-                );
-              document.getElementById("th-from").innerText =
-                functionElement.sourceUnit;
-              document.getElementById("th-to").innerText =
-                functionElement.targetUnit;
-              document.getElementById("formula").innerText =
-                functionElement.formula;
-            }
-
-            //and execute function on existing data
-            document.getElementById("convert-to").value = window[
-              document
-                .getElementById("convert-from")
-                .getAttribute("data-conversion-function")
-            ](document.getElementById("convert-from").value);
+          if (event.target.classList.contains("unit-selector")) {
+            unitSelector(event);
+          } else if (event.target.classList.contains("calc-selector")) {
+            calcSelector(event);
           }
         },
         true
