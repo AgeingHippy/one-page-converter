@@ -39,65 +39,20 @@
       </div>
 
       <div id="sidebar-div" class="float-sidebar">
-        <ul id="conversion-selector">
-          <li>
-            <a id="temp-selector" class="unit-selector" href="#">Temperature</a>
-            <ul class="collapse">
-              <li>
-                <a id="tempCToF" href="#" class="calc-selector"
-                  >celcius to farenheit</a
-                >
-              </li>
-              <li>
-                <a id="tempFToC" href="#" class="calc-selector"
-                  >farenheit to celcius</a
-                >
-              </li>
-              <li>
-                <a id="tempCToK" href="#" class="calc-selector"
-                  >celcius to kelvin</a
-                >
-              </li>
-              <li>
-                <a id="tempKToC" href="#" class="calc-selector"
-                  >kelvin to celcius</a
-                >
-              </li>
-            </ul>
-          </li>
-          <li>
-            <a id="length-selector" class="unit-selector" href="#">Length</a>
-            <ul class="collapse">
-              <li>
-                <a id="lengthCmToI" href="#" class="calc-selector"
-                  >cm to inch</a
-                >
-              </li>
-              <li>
-                <a id="tempIToCm" href="#" class="calc-selector">inch to cm</a>
-              </li>
-            </ul>
-          </li>
-          <li>
-            <a id="volume-selector" class="unit-selector" href="#">Volume</a>
-            <ul class="collapse">
-              <li>
-                <a id="volumeMlToPint" href="#" class="calc-selector"
-                  >milliliter to pint</a
-                >
-              </li>
-              <li>
-                <a id="volumePintToMl" href="#" class="calc-selector"
-                  >pint to milliliter</a
-                >
-              </li>
-            </ul>
-          </li>
+        <ul id="conversion-selector-list">
         </ul>
       </div>
     </div>
 
     <script>
+      //build selections list
+      {
+        debugger;
+        let functionMap = new Map(Object.entries(JSON.parse(sessionStorage.getItem("functionMap"))));
+        buildConversionSelectionHTML(functionMap);
+      }
+      
+
       //Show relevant lists and collapse others
       function unitSelector(e) {
         //set Units header
@@ -124,11 +79,13 @@
 
       function calcSelector(event) {
         let key = event.target.id;
-        let functionElement = JSON.parse(sessionStorage.getItem(key));
+        let functionMap = new Map(Object.entries(JSON.parse(sessionStorage.getItem("functionMap"))));
+        let functionElement = functionMap.get(key);
 
         if (functionElement) {
           document.getElementById("conversion-header").innerText =
-            event.target.innerText;
+          `${functionElement.sourceUnit} to ${functionElement.targetUnit}`;  
+          // event.target.innerText;
           document
             .getElementById("convert-from")
             .setAttribute(
@@ -158,7 +115,7 @@
       }
 
       //delegated function to initialise conversion factor data on calc-select
-      document.getElementById("conversion-selector").addEventListener(
+      document.getElementById("conversion-selector-list").addEventListener(
         "click",
         (event) => {
           if (event.target.classList.contains("unit-selector")) {

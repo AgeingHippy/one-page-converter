@@ -22,6 +22,22 @@ function tempKToF(k) {
   return (k - 273.15) * 1.8 + 32;
 }
 
+function distCmToInch(cm) {
+  return cm / 2.54;
+}
+
+function distInchToCm(inch) {
+  return inch * 2.54;
+}
+
+function distMileToKm(mile) {
+  return mile * 1.60934;
+}
+
+function distKmToMile(km) {
+  return km / 1.60934;
+}
+
 
 
 //=====================
