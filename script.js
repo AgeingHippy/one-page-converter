@@ -41,7 +41,8 @@ function distKmToMile(km) {
 
 
 //=====================
-//get the next sybling element of 'element' where tagName is 'tag'
+//get an array of siblings of element where tagName == localName
+//siblings are listed in the order in which they appear in the DOM
 function getElementSiblings(element, localName = "") {
   let list = [];
   let sibling = element.previousElementSibling;
@@ -61,4 +62,23 @@ function getElementSiblings(element, localName = "") {
   }
 
   return list;
+}
+
+//limit the content of an element based on the permitted pattern
+//disable event default action if pattern is not matched
+//todo - strip leading zero if relevant
+//todo - manage cut and paste
+function limitContentOnKeypress(event) {
+  
+  const pattern = /^-{0,1}\d*\.{0,1}\d*$/;
+  let start = event.target.selectionStart;
+  let end = event.target.selectionEnd;
+  let text = event.target.value;
+  let startText = text.substr(0, start);
+  let selectedText = text.substr(start, end - start);
+  let endText = text.substr(end);
+
+  if (!pattern.test(startText + event.key + endText)) {
+    event.preventDefault();
+  }
 }

@@ -46,7 +46,7 @@
     </div>
 
     <script>
-      //build selections list
+      //build the conversion selections list in the sidebar
       {
         let functionMap = new Map(
           Object.entries(JSON.parse(sessionStorage.getItem("functionMap")))
@@ -128,28 +128,23 @@
         true
       );
 
-      //Only accept numbers (including - and decimals) - reject all other keypresses
-      //todo - strip leading zero if relevant
+      //Only accept numbers (including '-' and decimals) - reject all other keypresses
       document
         .getElementById("convert-from")
-        .addEventListener("keypress", (event) => {
-          const pattern = /^-{0,1}\d*\.{0,1}\d*$/;
-          let start = event.target.selectionStart;
-          let end = event.target.selectionEnd;
-          let text = event.target.value;
-          let startText = text.substr(0, start);
-          let selectedText = text.substr(start, end - start);
-          let endText = text.substr(end);
-
-          if (!pattern.test(startText + event.key + endText)) {
-            event.preventDefault();
-          }
-        });
+        .addEventListener("keypress", limitContentOnKeypress);
 
       //perform conversion function on input value change
       document
         .getElementById("convert-from")
         .addEventListener("keyup", doConversionAndShowResult);
+
+      //prevent paste on input box
+      document
+        .getElementById("convert-from")
+        .addEventListener("paste", (event) => {
+          event.preventDefault();
+        });
+
 
       //switch conversion function
       document
