@@ -111,7 +111,7 @@ functionMap.set(
 );
 
 functionMap.set(
-  "disthMileToKm",
+  "distMileToKm",
   new ConversionFunctionElement(
     "Distance",
     "distMileToKm",

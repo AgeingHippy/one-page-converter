@@ -27,7 +27,9 @@
               />
             </td>
             <td id="td-switch">
-              <button type="button">&lt;=switch=&gt;</button>
+              <button id="convert-switch" type="button">
+                &lt;=switch=&gt;
+              </button>
             </td>
             <td id="td-to">
               <input type="text" id="convert-to" disabled />
@@ -39,31 +41,38 @@
       </div>
 
       <div id="sidebar-div" class="float-sidebar">
-        <ul id="conversion-selector-list">
-        </ul>
+        <ul id="conversion-selector-list"></ul>
       </div>
     </div>
 
     <script>
       //build selections list
       {
-        debugger;
-        let functionMap = new Map(Object.entries(JSON.parse(sessionStorage.getItem("functionMap"))));
+        let functionMap = new Map(
+          Object.entries(JSON.parse(sessionStorage.getItem("functionMap")))
+        );
         buildConversionSelectionHTML(functionMap);
       }
-      
+
+      function doConversionAndShowResult() {
+        document.getElementById("convert-to").value = window[
+          document
+            .getElementById("convert-from")
+            .getAttribute("data-conversion-function")
+        ](document.getElementById("convert-from").value);
+      }
 
       //Show relevant lists and collapse others
-      function unitSelector(e) {
+      function unitSelector(target) {
         //set Units header
-        document.getElementById("unit-header").innerText = e.target.innerText;
+        document.getElementById("unit-header").innerText = target.innerText;
 
         //set sibling ul class to not hidden (expanded)
-        let list = getElementSiblings(e.target, "ul");
+        let list = getElementSiblings(target, "ul");
         list.forEach((element) => element.classList.remove("collapse"));
 
         //set parent li siblings ul class to hidden
-        let listSiblings = getElementSiblings(e.target.parentElement, "li");
+        let listSiblings = getElementSiblings(target.parentElement, "li");
         listSiblings.forEach((li) => {
           for (let i = 0; i < li.getElementsByTagName("ul").length; i++) {
             li.getElementsByTagName("ul")[i].classList.add("collapse");
@@ -71,20 +80,16 @@
         });
       }
 
-      // Array.from(document.getElementsByClassName("unit-selector")).forEach(
-      //   (element) => {
-      //     element.addEventListener("click", unitSelector);
-      //   }
-      // );
-
-      function calcSelector(event) {
-        let key = event.target.id;
-        let functionMap = new Map(Object.entries(JSON.parse(sessionStorage.getItem("functionMap"))));
+      function calcSelector(key) {
+        let functionMap = new Map(
+          Object.entries(JSON.parse(sessionStorage.getItem("functionMap")))
+        );
         let functionElement = functionMap.get(key);
 
         if (functionElement) {
-          document.getElementById("conversion-header").innerText =
-          `${functionElement.sourceUnit} to ${functionElement.targetUnit}`;  
+          document.getElementById(
+            "conversion-header"
+          ).innerText = `${functionElement.sourceUnit} to ${functionElement.targetUnit}`;
           // event.target.innerText;
           document
             .getElementById("convert-from")
@@ -107,11 +112,7 @@
         }
 
         //and execute function on existing data
-        document.getElementById("convert-to").value = window[
-          document
-            .getElementById("convert-from")
-            .getAttribute("data-conversion-function")
-        ](document.getElementById("convert-from").value);
+        doConversionAndShowResult();
       }
 
       //delegated function to initialise conversion factor data on calc-select
@@ -119,9 +120,9 @@
         "click",
         (event) => {
           if (event.target.classList.contains("unit-selector")) {
-            unitSelector(event);
+            unitSelector(event.target);
           } else if (event.target.classList.contains("calc-selector")) {
-            calcSelector(event);
+            calcSelector(event.target.id);
           }
         },
         true
@@ -145,13 +146,18 @@
           }
         });
 
-      //perform conversion function on value change
+      //perform conversion function on input value change
       document
         .getElementById("convert-from")
-        .addEventListener("keyup", (event) => {
-          document.getElementById("convert-to").value = window[
-            event.target.getAttribute("data-conversion-function")
-          ](event.target.value);
+        .addEventListener("keyup", doConversionAndShowResult);
+
+      //switch conversion function
+      document
+        .getElementById("convert-switch")
+        .addEventListener("click", () => {
+          let converseFunctionName =
+            document.getElementById("convert-to").dataset.conversionFunction;
+          calcSelector(converseFunctionName);
         });
     </script>
   </body>
